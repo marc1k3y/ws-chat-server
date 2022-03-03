@@ -21,12 +21,12 @@ wss.on('connection', (ws) => {
       wss.clients
         .forEach(client => {
           if (client != ws) {
-            client.send(`Hello, broadcast message -> ${message}`)
+            client.send(message)
           }
         });
 
     } else {
-      ws.send(`Hello, you sent -> ${message}`)
+      ws.send(message)
     }
   })
 })
