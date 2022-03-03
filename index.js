@@ -10,7 +10,24 @@ const wss = new WebSocket.Server({ server })
 
 wss.on('connection', (ws) => {
   ws.on('message', (message) => {
-    ws.send(`${message}`)
+
+    console.log('received: %s', message)
+
+    const broadcastRegex = /^broadcast\:/
+
+    if (broadcastRegex.test(message)) {
+      message = message.replace(broadcastRegex, '')
+
+      wss.clients
+        .forEach(client => {
+          if (client != ws) {
+            client.send(`Hello, broadcast message -> ${message}`)
+          }
+        });
+
+    } else {
+      ws.send(`Hello, you sent -> ${message}`)
+    }
   })
 })
 
